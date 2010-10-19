@@ -1,11 +1,12 @@
 README 
 ======
 
-Readme for your plugin 
+This plugin allows to import the proprietary CSV format used by the Columbus V-900 data logger.
 
-    * Plugin author and contact email address.
-    
-    * The license for your plugin source code. If you have no special preferences, 
-      you can pick the license that is used for JOSM ("GPL v2 or later").
-      
-    * Notes for future developers, if needed.
+Two modes are supported
+a) Simple mode (default)
+b) Professional mode, logs additional GPS values like VDOP, HDOP, Fixing, ... (please refer to the manual for details)
+
+Waypoints and tracks are transformed into the GPX format.
+
+Please report bugs to oliver-wieland@t-online.de.
