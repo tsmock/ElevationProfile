@@ -28,7 +28,7 @@ import org.openstreetmap.josm.plugins.elevation.gui.ElevationProfileLayer;
  * 
  */
 public class ElevationProfilePlugin extends Plugin {
-    
+
     private ElevationMapMode eleMode;
     private IconToggleButton eleModeButton;
     private static ElevationProfileLayer currentLayer;
@@ -38,17 +38,17 @@ public class ElevationProfilePlugin extends Plugin {
      * @param info Context information about the plugin.
      */
     public ElevationProfilePlugin(PluginInformation info) {
-        super(info);
+    super(info);
 
-        try {
-            eleMode = new ElevationMapMode("Elevation profile", Main.map);
-            eleModeButton = new IconToggleButton(eleMode);
-        } catch (Exception e1) {
-            System.err.println("Init of ElevationProfilePlugin failed: " + e1);
-            e1.printStackTrace();
-        }
+    try {
+        eleMode = new ElevationMapMode("Elevation profile", Main.map);
+        eleModeButton = new IconToggleButton(eleMode);
+    } catch (Exception e1) {
+        System.err.println("Init of ElevationProfilePlugin failed: " + e1);
+        e1.printStackTrace();
     }
-    
+    }
+
     /**
      * Called after Main.mapFrame is initialized. (After the first data is loaded).
      * You can use this callback to tweak the newFrame to your needs, as example install
@@ -56,27 +56,27 @@ public class ElevationProfilePlugin extends Plugin {
      */
     @Override	
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        super.mapFrameInitialized(oldFrame, newFrame);
-        
-        if (newFrame != null) {
-            newFrame.addMapMode(eleModeButton);
-            ElevationProfileDialog eleProfileDlg = new ElevationProfileDialog();
-            eleProfileDlg.addModelListener(eleMode);
-            eleProfileDlg.setProfileLayer(getCurrentLayer());
-            newFrame.addToggleDialog(eleProfileDlg);
-        }
+    super.mapFrameInitialized(oldFrame, newFrame);
+
+    if (newFrame != null) {
+        newFrame.addMapMode(eleModeButton);
+        ElevationProfileDialog eleProfileDlg = new ElevationProfileDialog();
+        eleProfileDlg.addModelListener(eleMode);
+        eleProfileDlg.setProfileLayer(getCurrentLayer());
+        newFrame.addToggleDialog(eleProfileDlg);
     }
-    
+    }
+
     /**
      * Gets the elevation profile layer which decorates the current layer
      * with some markers.
      * @return
      */
     public static ElevationProfileLayer getCurrentLayer(){
-        if(currentLayer == null){
-            currentLayer = new ElevationProfileLayer("Elevation profile");
-            Main.main.addLayer(currentLayer);			
-        }
-        return currentLayer;
+    if(currentLayer == null){
+        currentLayer = new ElevationProfileLayer("Elevation profile");
+        Main.main.addLayer(currentLayer);			
+    }
+    return currentLayer;
     }
 }

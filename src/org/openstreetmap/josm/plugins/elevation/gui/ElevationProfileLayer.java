@@ -54,7 +54,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      *            The name of the layer.
      */
     public ElevationProfileLayer(String name) {
-        super(name);
+    super(name);
     }
 
     /**
@@ -63,7 +63,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      * @return
      */
     public IElevationProfile getProfile() {
-        return profile;
+    return profile;
     }
 
     /**
@@ -73,8 +73,8 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      *            The profile to show in the layer
      */
     public void setProfile(IElevationProfile profile) {
-        this.profile = profile;
-        Main.map.repaint();
+    this.profile = profile;
+    Main.map.repaint();
     }
 
     /*
@@ -84,7 +84,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public Icon getIcon() {
-        return ImageProvider.get("layer", "elevation_small");
+    return ImageProvider.get("layer", "elevation_small");
     }
 
     /*
@@ -94,7 +94,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public Object getInfoComponent() {
-        return getToolTipText();
+    return getToolTipText();
     }
 
     /*
@@ -104,8 +104,8 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public Action[] getMenuEntries() {
-        // TODO: More entries???
-        return new Action[] { new LayerListPopup.InfoAction(this) };
+    // TODO: More entries???
+    return new Action[] { new LayerListPopup.InfoAction(this) };
     }
 
     /*
@@ -115,11 +115,11 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public String getToolTipText() {
-        if (profile != null) {
-            return tr("Elevation profile for track ''{0}''.", profile.getName());
-        } else {
-            return tr("Elevation profile");
-        }
+    if (profile != null) {
+        return tr("Elevation profile for track ''{0}''.", profile.getName());
+    } else {
+        return tr("Elevation profile");
+    }
     }
 
     /*
@@ -131,7 +131,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public boolean isMergable(Layer other) {
-        return false;
+    return false;
     }
 
     /*
@@ -143,7 +143,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public void mergeFrom(Layer from) {
-        // nothing to do
+    // nothing to do
     }
 
     /*
@@ -154,70 +154,96 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds box) {
-        WayPoint lastWpt = null;
-        int lastEle = 0;
+    WayPoint lastWpt = null;
+    int lastEle = 0;
 
-        renderer.beginRendering();
-        if (profile != null) {			
-            // paint way points one by one
-            for (WayPoint wpt : profile.getWayPoints()) {
-                int ele = (int) WayPointHelper.getElevation(wpt);
-
-                if (lastWpt != null) {
-                    // normalize to levels
-                    int ele1 = (int)(ele / Level_Factor);
-                    int ele2 = (int)(lastEle / Level_Factor);
-                    
-                    // plain way point by default
-                    ElevationWayPointKind kind = ElevationWayPointKind.Plain;
-                    // check, if we passed an elevation level
-                    // We assume, that we cannot pass more than one levels between two way points ;-)
-                    if (ele1 != ele2 && Math.abs(ele1 - ele2) == 1) { 
-                        if (ele1 > ele2) { // we went down?
-                            kind =ElevationWayPointKind.ElevationLevelGain; 
-                        } else {
-                            kind =ElevationWayPointKind.ElevationLevelLoss;
-                        }
-                    } else { // check for elevation gain or loss
-                        if (ele > lastEle) { // we went down?
-                            kind =ElevationWayPointKind.ElevationGain;
-                        } else {
-                            kind =ElevationWayPointKind.ElevationLoss;
-                        }
-                    }
-                    
-                    // render way point
-                    renderer.renderWayPoint(g, profile, mv, wpt, kind);
-                }
-
-                // remember some things for next iteration
-                lastEle = (int) WayPointHelper.getElevation(wpt);
-                lastWpt = wpt;
-            }
-            
-            // now we paint special way points in emphasized style 
-            
-            // paint selected way point, if available
-            if (selWayPoint != null) {
-                renderer.renderWayPoint(g, profile, mv, selWayPoint,
-                        ElevationWayPointKind.Highlighted);
-            }
-
-            // paint start/end
-            renderer.renderWayPoint(g, profile, mv, profile.getStartWayPoint(),
-                    ElevationWayPointKind.StartPoint);
-            renderer.renderWayPoint(g, profile, mv, profile.getEndWayPoint(),
-                    ElevationWayPointKind.EndPoint);
-            // paint min/max
-            renderer.renderWayPoint(g, profile, mv, profile.getMaxWayPoint(),
-                    ElevationWayPointKind.MaxElevation);
-            renderer.renderWayPoint(g, profile, mv, profile.getMinWayPoint(),
-                    ElevationWayPointKind.MinElevation);
-        } 
+    renderer.beginRendering();
+    if (profile != null) {			
+        // paint way points one by one
+        for (WayPoint wpt : profile.getWayPoints()) {
         
-        renderer.finishRendering();
+
+        if (lastWpt != null) {
+            // determine way point
+            ElevationWayPointKind kind = classifyWayPoint(lastWpt, wpt);
+
+            // render way point
+            renderer.renderWayPoint(g, profile, mv, wpt, kind);
+        } // else first way point -> is paint later
+
+        // remember some things for next iteration
+        lastEle = (int) WayPointHelper.getElevation(wpt);
+        lastWpt = wpt;
+        }
+
+        // now we paint special way points in emphasized style 
+
+        // paint selected way point, if available
+        if (selWayPoint != null) {
+        renderer.renderWayPoint(g, profile, mv, selWayPoint,
+            ElevationWayPointKind.Highlighted);
+        }
+
+        // paint start/end
+        renderer.renderWayPoint(g, profile, mv, profile.getStartWayPoint(),
+            ElevationWayPointKind.StartPoint);
+        renderer.renderWayPoint(g, profile, mv, profile.getEndWayPoint(),
+            ElevationWayPointKind.EndPoint);
+        // paint min/max
+        renderer.renderWayPoint(g, profile, mv, profile.getMaxWayPoint(),
+            ElevationWayPointKind.MaxElevation);
+        renderer.renderWayPoint(g, profile, mv, profile.getMinWayPoint(),
+            ElevationWayPointKind.MinElevation);
+    } 
+
+    renderer.finishRendering();
     }
 
+    /**
+     * Checks if the given way point requires special decoration (e. g. elevation gain/loss or level crossing).
+     * 
+     * Parameters <tt>ele1</tt> and <tt>ele2</tt> point are used for detecting "level crossings",
+     * e. g. 1 to 2 indicate that we crossed the 200m elevation in upward direction
+     *
+     * @param lastWpt the last way point
+     * @param actWpt the actual way point 
+     * @return the elevation way point kind
+     */
+    private ElevationWayPointKind classifyWayPoint(WayPoint lastWpt, WayPoint actWpt) {
+    // get elevation values
+    int actEle = (int) WayPointHelper.getElevation(actWpt);
+    int lastEle = (int) WayPointHelper.getElevation(lastWpt);
+    
+    // normalize elevation to levels
+    int actLevel = (int)(actEle / Level_Factor);
+    int lastLevel = (int)(lastEle / Level_Factor);
+    double slope = Math.abs(WayPointHelper.computeSlope(lastWpt, actWpt));
+
+    // plain way point by default
+    ElevationWayPointKind kind = ElevationWayPointKind.Plain;
+    System.out.println("Slope: " + slope + "%");
+    
+    // check, if we passed an elevation level
+    // We assume, that we cannot pass more than one levels between two way points ;-)
+    if (actLevel != lastLevel && Math.abs(actLevel - lastLevel) == 1) { 
+        if (actLevel > lastLevel) { // we went down?		
+        kind =ElevationWayPointKind.ElevationLevelGain; 
+        } else {
+        kind =ElevationWayPointKind.ElevationLevelLoss;
+        }
+    } else { // check for elevation gain or loss
+        if (actEle > lastEle) { // we went uphill?
+        // TODO: Provide parameters for high/low thresholds
+        if (slope > 3) kind =ElevationWayPointKind.ElevationGainLow;
+        if (slope > 10) kind =ElevationWayPointKind.ElevationGainHigh;
+        } else {
+        if (slope > 3) kind =ElevationWayPointKind.ElevationLossLow;
+        if (slope > 10) kind =ElevationWayPointKind.ElevationLossHigh;
+        }
+    }
+    return kind;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -227,15 +253,15 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
-        // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
     }
 
     @Override
     public void selectedWayPointChanged(WayPoint newWayPoint) {
-        if (selWayPoint != newWayPoint) {
-            selWayPoint = newWayPoint;
-            Main.map.repaint();
-        }
+    if (selWayPoint != newWayPoint) {
+        selWayPoint = newWayPoint;
+        Main.map.repaint();
+    }
     }
 
 }
