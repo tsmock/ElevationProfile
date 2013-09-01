@@ -12,17 +12,19 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
+
+import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
  * @author Oliver Wieland <oliver.wieland@online.de>
- * Enumeration for available elevation correction modes. 
+ * Interface for all GPX data visitors. Hopefully this will be part of JOSM some day.
  */
-public enum GeoidCorrectionKind {
-	/** Elevation values remain unchanged */
-	None,
-	/** Automatic correction by geoid lookup table */
-	Auto,
-	/** Fixed value */
-	Fixed
+public interface IGpxWaypointVisitor {
+	/**
+	 * Visits a way point. This method is called for isolated way points, i. e. way points
+	 * without an associated route or track. 
+	 * @param wp The way point to visit.
+	 */
+	void visit(WayPoint wp);
 }

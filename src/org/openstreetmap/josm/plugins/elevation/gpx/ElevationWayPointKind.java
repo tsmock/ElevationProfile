@@ -12,7 +12,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
 
 /**
  * @author Oliver Wieland <oliver.wieland@online.de>
