@@ -20,15 +20,16 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
 
 /**
  * Provides methods to access way point attributes and some utility methods regarding elevation stuff (
  * e. g. special text formats, unit conversion, geoid calc).
  * @author Oliver Wieland <oliver.wieland@online.de> 
  */
-public class WayPointHelper {
+public class ElevationHelper {
     public static double METER_TO_FEET = 3.280948;
     
     /* Countries which use the imperial system instead of the metric system. */
@@ -41,7 +42,8 @@ public class WayPointHelper {
         "en_ZA"	/* South Africa */
     };
     
-    
+    /** The 'no elevation' data magic. */
+    public static double NO_ELEVATION = Double.NaN;
     
     /**
      * The name of the elevation height of a way point.
@@ -64,7 +66,7 @@ public class WayPointHelper {
     }
 
     public static void setGeoidKind(GeoidCorrectionKind geoidKind) {
-        WayPointHelper.geoidKind = geoidKind;
+        ElevationHelper.geoidKind = geoidKind;
     }
     
     /**
@@ -111,23 +113,77 @@ public class WayPointHelper {
     }
     
     /**
+     * Checks if given value is a valid elevation value.
+     *
+     * @param ele the ele
+     * @return true, if is valid elevation
+     */
+    public static boolean isValidElevation(double ele) {
+        return !Double.isNaN(ele);
+    }
+    
+    /**
      * Gets the elevation (Z coordinate) of a GPX way point in meter or feet (for
      * US, UK, ZA, AU, NZ and CA). 
      * 
      * @param wpt
      *            The way point instance.
-     * @return The x coordinate or 0, if the given way point is null or contains
+     * @return The x coordinate or <code>NO_ELEVATION</code>, if the given way point is null or contains
      *         not height attribute.
      */
     public static double getElevation(WayPoint wpt) {
-        double ele = getInternalElevation(wpt);
-
-        if (getUnitMode() == UnitMode.Imperial) {
-                // translate to feet
-            return meter2Feet(ele);
-        }	
+        if (wpt == null) return NO_ELEVATION;
         
-        return ele;
+        // try to get elevation from HGT file
+        double eleInt = getInternalElevation(wpt.getCoor());	    
+        if (isValidElevation(eleInt)) {
+        return convert(eleInt);
+        }
+        
+        // no HGT, check for elevation data in GPX
+        if (!wpt.attr.containsKey(HEIGHT_ATTRIBUTE)) {
+        // GPX has no elevation data :-(
+        return NO_ELEVATION;
+        }
+
+        // Parse elevation from GPX data
+        String height = wpt.getString(ElevationHelper.HEIGHT_ATTRIBUTE);
+        try {
+        double z = Double.parseDouble(height);
+
+        return convert(z);
+        } catch (NumberFormatException e) {
+        System.err.println(String.format(
+            "Cannot parse double from '%s': %s", height, e
+            .getMessage()));
+        return NO_ELEVATION;
+        }
+    }
+    
+    
+    public static double getElevation(LatLon ll) {
+        double ele = getInternalElevation(ll);
+        //System.out.println("Get elevation " + ll + " => " + ele);
+        return convert(ele);
+    }
+
+    /**
+     * Converts the value to feet, if required.
+     *
+     * @param ele the elevation to convert
+     * @return the double
+     */
+    private static double convert(double ele) {
+        if (isValidElevation(ele)) {
+            if (getUnitMode() == UnitMode.Imperial) {
+                // translate to feet
+                return meter2Feet(ele);
+            } else {
+                // keep 'as is'
+                return ele;
+            }
+        } 
+        return NO_ELEVATION;	    
     }
     
     /**
@@ -138,21 +194,16 @@ public class WayPointHelper {
      * @param w2 the second way point
      * @return the slope in percent
      */
-    public static double computeSlope(WayPoint w1, WayPoint w2) {
+    public static double computeSlope(LatLon w1, LatLon w2) {
             // same coordinates? -> return 0, if yes
-            if (w1.getCoor().equals(w2.getCoor())) return 0;
+            if (w1.equals(w2)) return 0;
         
         // get distance in meters and divide it by 100 in advance
-        double distInMeter = w1.getCoor().greatCircleDistance(w2.getCoor()) / 100.0;
+        double distInMeter = convert(w1.greatCircleDistance(w2) / 100.0);
         
-        // convert to feet?
-        if (getUnitMode() == UnitMode.Imperial) {
-            distInMeter = meter2Feet(distInMeter);
-        }
-                
         // get elevation (difference) - is converted automatically to feet
-        int ele1 = (int) WayPointHelper.getElevation(w1);
-        int ele2 = (int) WayPointHelper.getElevation(w2);
+        int ele1 = (int) ElevationHelper.getElevation(w1);
+        int ele2 = (int) ElevationHelper.getElevation(w2);
         int dH = ele2 - ele1;
         
         // Slope in percent is define as elevation gain/loss in meters related to a distance of 100m
@@ -189,13 +240,24 @@ public class WayPointHelper {
     
     /**
      * Gets the elevation string for a given way point, e. g "300m" or "800ft".
-     * @param elevation
-     * @return
+     *
+     * @param wpt the way point
+     * @return the elevation text
      */
     public static String getElevationText(WayPoint wpt) {
-        if (wpt == null) return null;
+        return getElevationText(wpt.getCoor());
+    }
+    
+    /**
+     * Gets the elevation string for a given coordinate, e. g "300m" or "800ft".
+     *
+     * @param coor the coordinate
+     * @return the elevation text
+     */
+    public static String getElevationText(LatLon coor) {
+        if (coor == null) return null;
         
-        int elevation = (int)Math.round(WayPointHelper.getElevation(wpt));
+        int elevation = (int)Math.round(ElevationHelper.getElevation(coor));
         return String.format("%d %s", (int)elevation, getUnit());
     }
     
@@ -207,51 +269,31 @@ public class WayPointHelper {
     public static String getTimeText(WayPoint wpt) {
         if (wpt == null) return null; 
         
-        int hour = WayPointHelper.getHourOfWayPoint(wpt);
-        int min = WayPointHelper.getMinuteOfWayPoint(wpt);		
+        int hour = ElevationHelper.getHourOfWayPoint(wpt);
+        int min = ElevationHelper.getMinuteOfWayPoint(wpt);		
         return String.format("%02d:%02d", hour, min);
     }
 
     /**
      * Gets the elevation (Z coordinate) of a GPX way point.
      * 
-     * @param wpt
+     * @param ll
      *            The way point instance.
      * @return The x coordinate or 0, if the given way point is null or contains
      *         not height attribute.
      */
-    private static double getInternalElevation(WayPoint wpt) {
-        if (wpt != null) {
+    private static double getInternalElevation(LatLon ll) {
+        if (ll != null) {
                 // Try to read data from SRTM file
                 // TODO: Option to switch this off
-                double eleHgt = hgt.getElevationFromHgt(wpt.getCoor());
+                double eleHgt = hgt.getElevationFromHgt(ll);
                 
-                if (!Double.isNaN(eleHgt)) {		    	    
+                System.out.println("Get elevation from HGT " + ll + " => " + eleHgt);
+                if (isValidElevation(eleHgt)) {		    	    
                     return eleHgt;
                 }
-            
-            if (!wpt.attr.containsKey(HEIGHT_ATTRIBUTE)) {
-                return 0;
-            }
-
-            String height = wpt.getString(WayPointHelper.HEIGHT_ATTRIBUTE);
-            try {
-                double z = Double.parseDouble(height);
-
-                if (geoidKind == GeoidCorrectionKind.Auto) {
-                    byte h = getGeoidCorrection(wpt);
-                    z += h;
-                }
-                return z;
-            } catch (NumberFormatException e) {
-                System.err.println(String.format(
-                        "Cannot parse double from '%s': %s", height, e
-                                .getMessage()));
-                return 0;
-            }
-        } else {
-            return 0;
         }
+        return NO_ELEVATION;
     }
 
     /*

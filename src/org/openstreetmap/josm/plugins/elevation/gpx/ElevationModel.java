@@ -12,7 +12,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,9 @@ import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 
 /**
  * Represents the top-level part of the elevation model. The elevation model
@@ -153,7 +156,7 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
         GpxIterator.visit(gpxData, this);
 
         // reduce data
-        setWayPoints(WayPointHelper.downsampleWayPoints(tmpWaypoints,
+        setWayPoints(ElevationHelper.downsampleWayPoints(tmpWaypoints,
                 getSliceSize()), false);
     }
 

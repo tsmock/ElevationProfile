@@ -12,28 +12,18 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
- * Interface for all GPX visitors.
  * @author Oliver Wieland <oliver.wieland@online.de>
+ * Interface for all GPX data visitors. Hopefully this will be part of JOSM some day.
  */
-public interface IGpxVisitor extends IGpxWaypointVisitor {
+public interface IGpxWaypointVisitor {
     /**
-     * Starts a GPX route, track or way point collection.
-     */
-    void start();
-    
-    /**
-     * Ends a GPX route, track or way point collection.
-     */
-    void end();
-    
-    /**
-     * Visits a way point within a GPX route.
-     * @param route The route containing the way point.
+     * Visits a way point. This method is called for isolated way points, i. e. way points
+     * without an associated route or track. 
      * @param wp The way point to visit.
      */
     void visit(WayPoint wp);

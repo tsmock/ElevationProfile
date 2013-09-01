@@ -11,11 +11,13 @@
  * You should have received a copy of the GNU General Public License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
 
 import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 
 /**
  * This class represents a 'leaf node' in the elevation profile tree. It has no children and ignores
@@ -42,7 +44,7 @@ public class ElevationProfileLeaf extends ElevationProfileBase {
     @Override
     public int elevationValueAt(int i) {
         if (i < 0 || i >= getNumberOfWayPoints()) throw new IndexOutOfBoundsException("Wrong index: " + i);
-        return (int)WayPointHelper.getElevation(getWayPoints().get(i));
+        return (int)ElevationHelper.getElevation(getWayPoints().get(i));
     }
 
     /* (non-Javadoc)

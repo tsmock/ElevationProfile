@@ -12,13 +12,15 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 
 /**
  * Base class for an elevation profile. An elevation profile is constructed out
@@ -175,7 +177,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
      */
     protected void setMinWayPoint(WayPoint wp) {
         importantWayPoints[WAYPOINT_MIN] = wp;
-        this.minHeight = (int) WayPointHelper.getElevation(wp);
+        this.minHeight = (int) ElevationHelper.getElevation(wp);
     }
 
     /**
@@ -184,7 +186,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
      */
     protected void setMaxWayPoint(WayPoint wp) {
         importantWayPoints[WAYPOINT_MAX] = wp;
-        this.maxHeight = (int) WayPointHelper.getElevation(wp);
+        this.maxHeight = (int) ElevationHelper.getElevation(wp);
     }
 
     /**
@@ -252,7 +254,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
      */
     public int elevationValueAt(int i) {
         if (checkIndex(i)) {
-            return (int) WayPointHelper.getElevation(wayPoints.get(i));
+            return (int) ElevationHelper.getElevation(wayPoints.get(i));
         } else {
             throw new IndexOutOfBoundsException(String.format(
                     "Invalid index: %d, expected 0..%d", i,
@@ -489,7 +491,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
             setStart(wp);
         }
 
-        int ele = (int) WayPointHelper.getElevation(wp);
+        int ele = (int) ElevationHelper.getElevation(wp);
 
         if (!isIgnoreZeroHeight() || ele > 0) {
             if (ele > maxHeight) {

@@ -11,12 +11,14 @@
  * You should have received a copy of the GNU General Public License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 
 /**
  * Represents a elevation model of a single GPX track, route or collection of
@@ -111,7 +113,7 @@ public class ElevationProfileNode extends ElevationProfileBase {
         }
         
         // downsample
-        setWayPoints(WayPointHelper.downsampleWayPoints(wayPoints, getSliceSize()), false);
+        setWayPoints(ElevationHelper.downsampleWayPoints(wayPoints, getSliceSize()), false);
     }
 
     /* (non-Javadoc)
