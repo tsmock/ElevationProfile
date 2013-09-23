@@ -12,7 +12,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.gpx;
 
 import java.util.Date;
 import java.util.List;
@@ -24,14 +24,6 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
  * Interface for an elevation profile providing special properties/values.
  */
 public interface IElevationProfile {
-    /**
-     * Gets the slice size for the detail view.
-     * @return
-     */
-    public int getSliceSize();
-    
-    public void setSliceSize(int sliceSize);
-    
     /**
      * Gets the name of the elevation profile.
      * @return
