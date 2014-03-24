@@ -1,17 +1,4 @@
-/**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation;
 
 import java.util.Date;
@@ -30,7 +17,7 @@ public interface IElevationProfile {
      * @return
      */
     public abstract String getName();
-    
+
     /**
      * Gets the time stamp of first recorded track point.
      * @return
@@ -42,7 +29,7 @@ public interface IElevationProfile {
      * @return
      */
     public abstract Date getEnd();
-    
+
     /**
      * Gets the minimum elevation height of all tracks and routes.
      * @return
@@ -54,24 +41,24 @@ public interface IElevationProfile {
      * @return
      */
     public abstract int getMaxHeight();
-    
+
     /**
      * Gets the distance of the track in kilometers.
      */
     public abstract double getDistance();
-    
+
     /**
      * Gets the average elevation height of all tracks and routes.
      * @return
      */
     public abstract int getAverageHeight();
-    
+
     /**
      * Gets the difference between min and max elevation.
      * @return
      */
     public int getHeightDifference();
-    
+
     /**
      * Gets the elevation gain.
      * 
@@ -80,43 +67,43 @@ public interface IElevationProfile {
     public int getGain();
 
     /**
-     * Gets the total number of way points (sum of all way points of all tracks and routes). 
+     * Gets the total number of way points (sum of all way points of all tracks and routes).
      * @return
      */
     public abstract int getNumberOfWayPoints();
-    
+
     /**
      * Gets the list containing the way points.
      * @return
      */
     public List<WayPoint> getWayPoints();
-    
+
     /**
      * Gets the first recorded way point.
      * @return
      */
     public WayPoint getStartWayPoint();
-    
+
     /**
      * Gets the last recorded way point.
      * @return
      */
     public WayPoint getEndWayPoint();
-    
+
     /**
      * Gets the way point with the highest elevation value.
      * @return
      */
     public WayPoint getMaxWayPoint();
-    
+
     /**
      * Gets the way point with the lowest elevation value.
      * @return
      */
     public WayPoint getMinWayPoint();
-    
+
     /**
-     * Gets a flag indicating whether the associated way points 
+     * Gets a flag indicating whether the associated way points
      * contained elevation data or not. This is the case if min
      * and max height are equal.
      * @return
@@ -128,29 +115,29 @@ public interface IElevationProfile {
      * @return
      */
     public long getTimeDifference();
-    
+
     /**
      * Gets the elevation value for at the given data index point.
      */
     public int elevationValueAt(int i);
-    
+
     /**
      * Gets the coordinate bounds of the elevation profile.
      *
      * @return the bounds
      */
     public Bounds getBounds();
-    
+
     /**
      * Gets the children of the segment (maybe null).
      */
     public List<IElevationProfile> getChildren();
-    
+
     /**
      * Gets the parent of the elevation profile.
      */
     public IElevationProfile getParent();
-    
+
     /**
      * Triggers model refresh.
      */

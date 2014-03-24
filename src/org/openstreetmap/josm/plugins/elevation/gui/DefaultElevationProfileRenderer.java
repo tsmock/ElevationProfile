@@ -1,17 +1,4 @@
-/**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.gui;
 
 import java.awt.BasicStroke;
@@ -39,11 +26,11 @@ import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * Provides default rendering for elevation profile layer. 
+ * Provides default rendering for elevation profile layer.
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class DefaultElevationProfileRenderer implements
-        IElevationProfileRenderer {
+IElevationProfileRenderer {
 
     private static final int ROUND_RECT_RADIUS = 6;
     /**
@@ -69,18 +56,9 @@ public class DefaultElevationProfileRenderer implements
     // private static final double RAD_270 = Math.PI * 1.5;
     private static final double RAD_90 = Math.PI * 0.5;
 
-    private List<Rectangle> forbiddenRects = new ArrayList<Rectangle>();
+    private final List<Rectangle> forbiddenRects = new ArrayList<Rectangle>();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.gui.IElevationProfileRenderer
-     * #getColorForWaypoint
-     * (org.openstreetmap.josm.plugins.elevation.IElevationProfile,
-     * org.openstreetmap.josm.data.gpx.WayPoint,
-     * org.openstreetmap.josm.plugins.elevation.ElevationWayPointKind)
-     */
+    @Override
     public Color getColorForWaypoint(IElevationProfile profile, WayPoint wpt,
             ElevationWayPointKind kind) {
 
@@ -92,19 +70,19 @@ public class DefaultElevationProfileRenderer implements
 
         switch (kind) {
         case Plain:
-                return Color.LIGHT_GRAY;
+            return Color.LIGHT_GRAY;
         case ElevationLevelLoss:
-                return LEVEL_LOSS_COLOR;
+            return LEVEL_LOSS_COLOR;
         case ElevationLevelGain:
             return LEVEL_GAIN_COLOR;
         case Highlighted:
             return Color.ORANGE;
         case ElevationGainHigh:
-                return Color.getHSBColor(0.3f, 1.0f, 1.0f); // green
+            return Color.getHSBColor(0.3f, 1.0f, 1.0f); // green
         case ElevationLossHigh:
             return Color.getHSBColor(0, 1.0f, 1.0f); // red
         case ElevationGainLow:
-                return Color.getHSBColor(0.3f, 0.5f, 1.0f); // green with low sat
+            return Color.getHSBColor(0.3f, 0.5f, 1.0f); // green with low sat
         case ElevationLossLow:
             return Color.getHSBColor(0, 0.5f, 1.0f); // red with low sat
         case FullHour:
@@ -117,33 +95,24 @@ public class DefaultElevationProfileRenderer implements
             return START_COLOR;
         case EndPoint:
             return END_POINT;
-        default:		    
+        default:
             break;
         }
 
         throw new RuntimeException("Unknown way point kind: " + kind);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.gui.IElevationProfileRenderer
-     * #renderWayPoint(java.awt.Graphics,
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile,
-     * org.openstreetmap.josm.data.gpx.WayPoint,
-     * org.openstreetmap.josm.plugins.elevation.ElevationWayPointKind)
-     */
+    @Override
     public void renderWayPoint(Graphics g, IElevationProfile profile,
             MapView mv, WayPoint wpt, ElevationWayPointKind kind) {
 
         CheckParameterUtil.ensureParameterNotNull(g, "graphics");
         CheckParameterUtil.ensureParameterNotNull(profile, "profile");
         CheckParameterUtil.ensureParameterNotNull(mv, "map view");
-                
+
         if (wpt == null) {
             System.err.println(String.format(
-                    "Cannot paint: mv=%s, prof=%s, wpt=%s", mv, profile, wpt));			
+                    "Cannot paint: mv=%s, prof=%s, wpt=%s", mv, profile, wpt));
             return;
         }
 
@@ -161,41 +130,38 @@ public class DefaultElevationProfileRenderer implements
             break;
         }
     }
-    
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.elevation.gui.IElevationProfileRenderer#renderWayPoints(java.awt.Graphics, org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile, org.openstreetmap.josm.gui.MapView, org.openstreetmap.josm.data.gpx.WayPoint, org.openstreetmap.josm.data.gpx.WayPoint)
-     */
+
     @Override
     public void renderLine(Graphics g, IElevationProfile profile,
-        MapView mv, WayPoint wpt1, WayPoint wpt2, ElevationWayPointKind kind) {
-        
-            CheckParameterUtil.ensureParameterNotNull(g, "graphics");
+            MapView mv, WayPoint wpt1, WayPoint wpt2, ElevationWayPointKind kind) {
+
+        CheckParameterUtil.ensureParameterNotNull(g, "graphics");
         CheckParameterUtil.ensureParameterNotNull(profile, "profile");
         CheckParameterUtil.ensureParameterNotNull(mv, "map view");
-        
+
         if (wpt1 == null || wpt2 == null) {
             System.err.println(String.format(
-                    "Cannot paint line: mv=%s, prof=%s, kind = %s", mv, profile, kind));			
+                    "Cannot paint line: mv=%s, prof=%s, kind = %s", mv, profile, kind));
             return;
         }
-        
+
         // obtain and set color
         g.setColor(getColorForWaypoint(profile, wpt2, kind));
-        
+
         // transform to view
         Point pnt1 = mv.getPoint(wpt1.getEastNorth());
         Point pnt2 = mv.getPoint(wpt2.getEastNorth());
-        
+
         // use thick line, if possible
         if (g instanceof Graphics2D) {
             Graphics2D g2 = (Graphics2D) g;
             Stroke oldS = g2.getStroke();
             try {
-            g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            g2.drawLine(pnt1.x, pnt1.y, pnt2.x, pnt2.y);
+                g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                g2.drawLine(pnt1.x, pnt1.y, pnt2.x, pnt2.y);
             } finally {
-            // must be restored; otherwise other layers may using this style, too 
-            g2.setStroke(oldS);
+                // must be restored; otherwise other layers may using this style, too
+                g2.setStroke(oldS);
             }
         } else {
             // only poor man's graphics
@@ -222,7 +188,7 @@ public class DefaultElevationProfileRenderer implements
 
         Color c = getColorForWaypoint(profile, wpt, kind);
         Point pnt = mv.getPoint(wpt.getEastNorth());
-        
+
         /* Paint full hour label */
         if (kind == ElevationWayPointKind.FullHour) {
             int hour = ElevationHelper.getHourOfWayPoint(wpt);
@@ -232,9 +198,9 @@ public class DefaultElevationProfileRenderer implements
 
         /* Paint label for elevation levels */
         if (kind == ElevationWayPointKind.ElevationLevelGain || kind == ElevationWayPointKind.ElevationLevelLoss) {
-                int ele = ((int) Math.rint(ElevationHelper.getElevation(wpt) / 100.0)) * 100;
+            int ele = ((int) Math.rint(ElevationHelper.getElevation(wpt) / 100.0)) * 100;
             drawLabelWithTriangle(ElevationHelper.getElevationText(ele), pnt.x, pnt.y
-                    + g.getFontMetrics().getHeight(), g, Color.darkGray, 8, 
+                    + g.getFontMetrics().getHeight(), g, Color.darkGray, 8,
                     getColorForWaypoint(profile, wpt, kind),
                     kind == ElevationWayPointKind.ElevationLevelGain ? TriangleDir.Up : TriangleDir.Down);
         }
@@ -573,5 +539,5 @@ public class DefaultElevationProfileRenderer implements
         // nothing to do currently
     }
 
-    
+
 }

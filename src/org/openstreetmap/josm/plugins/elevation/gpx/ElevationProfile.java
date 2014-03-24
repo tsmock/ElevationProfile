@@ -1,20 +1,6 @@
-/**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.gpx;
-
-import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +8,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
+
 
 /**
  * Base class for an elevation profile. An elevation profile is constructed out
@@ -44,7 +31,7 @@ import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
  * 
  */
 public class ElevationProfile implements IElevationProfile,
-        IGpxWaypointVisitor {
+IGpxWaypointVisitor {
     public static final int WAYPOINT_START = 0;
     public static final int WAYPOINT_END = 1;
     public static final int WAYPOINT_MIN = 2;
@@ -57,7 +44,7 @@ public class ElevationProfile implements IElevationProfile,
     private double dist;
     private Date start = new Date();
     private Date end = new Date();
-    private WayPoint[] importantWayPoints = new WayPoint[4];
+    private final WayPoint[] importantWayPoints = new WayPoint[4];
     private IElevationProfile parent;
     private int sumEle; // temp var for average height
     private List<WayPoint> wayPoints;
@@ -65,7 +52,7 @@ public class ElevationProfile implements IElevationProfile,
     private int gain;
     private int lastEle;
     private Bounds bounds;
-    
+
     private static boolean ignoreZeroHeight = true;
 
     /**
@@ -94,7 +81,7 @@ public class ElevationProfile implements IElevationProfile,
         super();
         this.name = name;
         this.parent = parent;
-        
+
         setWayPoints(wayPoints);
     }
 
@@ -116,13 +103,7 @@ public class ElevationProfile implements IElevationProfile,
         ElevationProfile.ignoreZeroHeight = ignoreZeroHeight;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#invalidateModel
-     * (int)
-     */
+    @Override
     public void updateElevationData() {
         updateValues();
     }
@@ -134,43 +115,44 @@ public class ElevationProfile implements IElevationProfile,
     protected void updateValues() {
         if (wayPoints == null)
             return;
-        
-        int n = this.wayPoints.size(); 
+
+        int n = this.wayPoints.size();
         if (n == 0)
             return;
 
-        start = new Date();		
+        start = new Date();
         end = new Date(0L);
         this.minHeight = Integer.MAX_VALUE;
         this.maxHeight = Integer.MIN_VALUE;
         sumEle = 0;
         gain = 0;
         lastEle = 0;
-        
+
         for (WayPoint wayPoint : this.wayPoints) {
             visitWayPoint(wayPoint);
         }
-        
+
         if (this.minHeight == Integer.MAX_VALUE && this.maxHeight == Integer.MIN_VALUE) {
-            // file does not contain elevation data	at all
+            // file does not contain elevation data    at all
             minHeight = 0;
             maxHeight = 0;
             setMinWayPoint(wayPoints.get(0));
             setMaxWayPoint(wayPoints.get(n-1));
-        }		
-        
+        }
+
         //if (start.after(end) || start.equals(end)) {
-            // GPX does not contain time stamps -> use sequential order
-            setStart(wayPoints.get(0));
-            setEnd(wayPoints.get(n-1));
+        // GPX does not contain time stamps -> use sequential order
+        setStart(wayPoints.get(0));
+        setEnd(wayPoints.get(n-1));
         //}
-        
+
         avrgHeight = sumEle / n;
     }
 
     /**
-     * Gets the name of the profile. 
+     * Gets the name of the profile.
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -210,7 +192,7 @@ public class ElevationProfile implements IElevationProfile,
     }
 
     /**
-     * Sets the very first way point. 
+     * Sets the very first way point.
      * @param wp
      */
     protected void setStart(WayPoint wp) {
@@ -241,7 +223,7 @@ public class ElevationProfile implements IElevationProfile,
             this.wayPoints = new ArrayList<WayPoint>(wayPoints);
             numWayPoints = wayPoints != null ? wayPoints.size() : 0;
             updateValues();
-            
+
         }
     }
 
@@ -256,13 +238,7 @@ public class ElevationProfile implements IElevationProfile,
         return index >= 0 && index < getNumberOfWayPoints();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#elevationValueAt
-     * (int)
-     */
+    @Override
     public int elevationValueAt(int i) {
         if (checkIndex(i)) {
             return (int) ElevationHelper.getElevation(wayPoints.get(i));
@@ -273,52 +249,27 @@ public class ElevationProfile implements IElevationProfile,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getAverageHeight
-     * ()
-     */
+    @Override
     public int getAverageHeight() {
         return avrgHeight;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getChildren()
-     */
+    @Override
     public List<IElevationProfile> getChildren() {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.openstreetmap.josm.plugins.elevation.IElevationProfile#getEnd()
-     */
+    @Override
     public Date getEnd() {
         return end;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getMaxHeight()
-     */
+    @Override
     public int getMaxHeight() {
         return maxHeight;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getMinHeight()
-     */
+    @Override
     public int getMinHeight() {
         return minHeight;
     }
@@ -328,145 +279,97 @@ public class ElevationProfile implements IElevationProfile,
      * 
      * @return
      */
+    @Override
     public int getHeightDifference() {
-        return maxHeight - minHeight;		
+        return maxHeight - minHeight;
     }
-    
+
     /**
      * Gets the elevation gain.
      * 
      * @return
      */
+    @Override
     public int getGain() {
         return gain;
     }
-    
-    
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.elevation.IElevationProfile#getDistance()
-     */
+
     @Override
     public double getDistance() {
         return dist; // dist is in meters
     }
-    
+
     /**
      * Sets the distance of the elevation profile.
      * @param dist
      */
     protected void setDistance(double dist) {
-        this.dist = dist; 
+        this.dist = dist;
     }
 
     /**
      * Returns the time between start and end of the track.
      * @return
      */
+    @Override
     public long getTimeDifference() {
         WayPoint wp1 = getStartWayPoint();
         WayPoint wp2 = getEndWayPoint();
-        
+
         if (wp1 != null && wp2 != null) {
             long diff = wp2.getTime().getTime() - wp1.getTime().getTime();
             return diff;
         }
-        
+
         return 0L;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getParent()
-     */
+    @Override
     public IElevationProfile getParent() {
         return parent;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getStart()
-     */
-
+    @Override
     public Date getStart() {
         return start;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getEndWayPoint
-     * ()
-     */
-
+    @Override
     public WayPoint getEndWayPoint() {
         return importantWayPoints[WAYPOINT_END];
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getMaxWayPoint
-     * ()
-     */
-
+    @Override
     public WayPoint getMaxWayPoint() {
         return importantWayPoints[WAYPOINT_MAX];
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getMinWayPoint
-     * ()
-     */
-
+    @Override
     public WayPoint getMinWayPoint() {
         return importantWayPoints[WAYPOINT_MIN];
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getStartWayPoint
-     * ()
-     */
+    @Override
     public WayPoint getStartWayPoint() {
         return importantWayPoints[WAYPOINT_START];
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getWayPoints()
-     */
+    @Override
     public List<WayPoint> getWayPoints() {
         return wayPoints;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.openstreetmap.josm.plugins.elevation.ElevationProfileBase#
-     * getNumberOfWayPoints()
-     */
+    @Override
     public int getNumberOfWayPoints() {
         return numWayPoints;// wayPoints != null ? wayPoints.size() : 0;
     }
-    
+
     /**
      * Gets the coordinate bounds of this profile. See {@link Bounds} for details.
      *
      * @return the bounds of this elevation profile
      */
+    @Override
     public Bounds getBounds() {
         return bounds;
     }
@@ -478,6 +381,7 @@ public class ElevationProfile implements IElevationProfile,
      * 
      * @return
      */
+    @Override
     public boolean hasElevationData() {
         return minHeight != maxHeight;
     }
@@ -486,6 +390,7 @@ public class ElevationProfile implements IElevationProfile,
      * Visits a way point in order to update statistical values about the given
      * way point list.
      */
+    @Override
     public void visitWayPoint(WayPoint wp) {
         if (wp.getTime().after(end)) {
             setEnd(wp);
@@ -501,7 +406,7 @@ public class ElevationProfile implements IElevationProfile,
         } else {
             bounds.extend(wp.getCoor());
         }
-        
+
         int ele = (int) ElevationHelper.getElevation(wp);
 
         if (!isIgnoreZeroHeight() || ele > 0) {
@@ -511,16 +416,17 @@ public class ElevationProfile implements IElevationProfile,
             if (ele < minHeight) {
                 setMinWayPoint(wp);
             }
-            
+
             if (ele > lastEle) {
                 gain += ele - lastEle;
             }
 
             sumEle += ele;
-            lastEle = ele;			
+            lastEle = ele;
         }
     }
-    
+
+    @Override
     public String toString() {
         return name; /*"ElevationProfileBase [start=" + getStart() + ", end=" + getEnd()
                 + ", minHeight=" + getMinHeight() + ", maxHeight="

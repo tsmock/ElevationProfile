@@ -1,17 +1,4 @@
-/**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.gui;
 
 import java.awt.Graphics;
@@ -29,7 +16,7 @@ import java.awt.geom.Rectangle2D;
  * Class to represent a triangle shape. {@see java.awt.Shape}.
  */
 public class Triangle implements Shape {
-    private Polygon poly;
+    private final Polygon poly;
 
     /**
      * Copy constructor.
@@ -51,7 +38,7 @@ public class Triangle implements Shape {
         poly = new Polygon();
         poly.addPoint(p1.x, p1.y);
         poly.addPoint(p2.x, p2.y);
-        poly.addPoint(p3.x, p3.y);		
+        poly.addPoint(p3.x, p3.y);
     }
 
     /**
@@ -70,74 +57,53 @@ public class Triangle implements Shape {
         g.fillPolygon(poly);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#getBounds()
-     */
+    @Override
     public Rectangle getBounds() {
         return poly.getBounds();
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#getBounds2D()
-     */
+    @Override
     public Rectangle2D getBounds2D() {
         return poly.getBounds2D();
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#contains(double, double)
-     */
+    @Override
     public boolean contains(double x, double y) {
         return poly.contains(x, y);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#contains(java.awt.geom.Point2D)
-     */
+    @Override
     public boolean contains(Point2D p) {
         return poly.contains(p);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#intersects(double, double, double, double)
-     */
+    @Override
     public boolean intersects(double x, double y, double w, double h) {
         return poly.intersects(x, y, w, h);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#intersects(java.awt.geom.Rectangle2D)
-     */
+    @Override
     public boolean intersects(Rectangle2D r) {
         return poly.intersects(r);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#contains(double, double, double, double)
-     */
+    @Override
     public boolean contains(double x, double y, double w, double h) {
         return poly.contains(x, y, w, h);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#contains(java.awt.geom.Rectangle2D)
-     */
+    @Override
     public boolean contains(Rectangle2D r) {
         return poly.intersects(r);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#getPathIterator(java.awt.geom.AffineTransform)
-     */
+    @Override
     public PathIterator getPathIterator(AffineTransform at) {
         return poly.getPathIterator(at);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.Shape#getPathIterator(java.awt.geom.AffineTransform, double)
-     */
+    @Override
     public PathIterator getPathIterator(AffineTransform at, double flatness) {
         return poly.getPathIterator(at, flatness);
     }
-
 }

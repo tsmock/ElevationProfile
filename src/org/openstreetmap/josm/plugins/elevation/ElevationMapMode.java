@@ -1,17 +1,4 @@
-/**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -30,19 +17,17 @@ public class ElevationMapMode extends MapMode implements IElevationModelListener
      * 
      */
     private static final long serialVersionUID = -1011179566962655639L;
-    
 
-    public ElevationMapMode(String name, MapFrame mapFrame) {		
-        super(name, 
-                "elevation.png", 
-                tr("Shows elevation profile"), 
-                mapFrame, 
-                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));		
+
+    public ElevationMapMode(String name, MapFrame mapFrame) {
+        super(name,
+                "elevation.png",
+                tr("Shows elevation profile"),
+                mapFrame,
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.elevation.IElevationModelListener#elevationProfileChanged(org.openstreetmap.josm.plugins.elevation.IElevationProfile)
-     */
+    @Override
     public void elevationProfileChanged(IElevationProfile profile) {
         ElevationProfilePlugin.getCurrentLayer().setProfile(profile);
     }
