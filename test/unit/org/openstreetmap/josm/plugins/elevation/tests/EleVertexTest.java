@@ -53,7 +53,7 @@ public class EleVertexTest extends TestCase {
         EleCoordinate c1 = new EleCoordinate(new LatLon(50.8328, 8.1337), 300);
         EleCoordinate c2 = new EleCoordinate(new LatLon(50.8328, 7.9217), 200);
         EleCoordinate c3 = new EleCoordinate(new LatLon(50.9558, 7.9217), 400);
-        EleCoordinate c4 = new EleCoordinate(new LatLon(50.5767627, 9.1938483), 100);
+        /*EleCoordinate c4 =*/ new EleCoordinate(new LatLon(50.5767627, 9.1938483), 100);
 
         EleVertex v1 = new EleVertex(c1, c2, c3);
         System.out.println("Start recurse");
