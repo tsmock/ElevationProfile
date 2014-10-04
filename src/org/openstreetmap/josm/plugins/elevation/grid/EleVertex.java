@@ -100,12 +100,12 @@ public class EleVertex {
      * @return true, if is finished
      */
     public boolean isFinished() {
-        double z = 0D;
+        /*double z = 0D;
         double avrgEle = getEle();
 
         for (EleCoordinate point : points) {
             z += (avrgEle - point.getEle()) * (avrgEle - point.getEle());
-        }
+        }*/
 
         // TODO: Check for proper limit
         return /*z < 75 || */getArea() < (30 * 30); // = 3 * 25
