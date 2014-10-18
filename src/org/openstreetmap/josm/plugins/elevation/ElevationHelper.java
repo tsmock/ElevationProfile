@@ -113,7 +113,7 @@ public class ElevationHelper {
     /**
      * Gets the elevation (Z coordinate) of a GPX way point in meter or feet (for
      * US, UK, ZA, AU, NZ and CA).
-     * 
+     *
      * @param wpt
      *            The way point instance.
      * @return The x coordinate or <code>NO_ELEVATION</code>, if the given way point is null or contains
@@ -254,7 +254,7 @@ public class ElevationHelper {
 
     /**
      * Gets the SRTM elevation (Z coordinate) of the given coordinate.
-     * 
+     *
      * @param ll
      *            The coordinate.
      * @return The z coordinate or {@link Double#NaN}, if elevation value could not be obtained
@@ -308,7 +308,7 @@ public class ElevationHelper {
 
     /**
      * Reduces a given list of way points to the specified target size.
-     * 
+     *
      * @param origList
      *            The original list containing the way points.
      * @param targetSize
@@ -332,7 +332,7 @@ public class ElevationHelper {
 
         int delta = (int) Math.max(Math.ceil(origSize / targetSize), 2);
 
-        List<WayPoint> res = new ArrayList<WayPoint>(targetSize);
+        List<WayPoint> res = new ArrayList<>(targetSize);
         for (int i = 0; i < origSize; i += delta) {
             res.add(origList.get(i));
         }

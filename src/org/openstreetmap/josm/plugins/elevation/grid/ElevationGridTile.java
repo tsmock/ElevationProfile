@@ -24,8 +24,8 @@ import org.openstreetmap.josm.plugins.elevation.IVertexRenderer;
 import org.openstreetmap.josm.plugins.elevation.gui.Triangle;
 
 public class ElevationGridTile extends Tile {
-    private final BlockingDeque<EleVertex> toDo = new LinkedBlockingDeque<EleVertex>();
-    private final BlockingDeque<EleVertex> vertices = new LinkedBlockingDeque<EleVertex>();
+    private final BlockingDeque<EleVertex> toDo = new LinkedBlockingDeque<>();
+    private final BlockingDeque<EleVertex> vertices = new LinkedBlockingDeque<>();
 
     private Bounds box;
 

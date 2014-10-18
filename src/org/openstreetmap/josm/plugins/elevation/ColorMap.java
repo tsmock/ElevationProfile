@@ -20,7 +20,7 @@ public class ColorMap {
     private static HashMap<String, ColorMap> colorMaps;
 
     static {
-        colorMaps = new HashMap<String, ColorMap>();
+        colorMaps = new HashMap<>();
     }
 
     // Private ctor to enforce use of create
@@ -151,7 +151,7 @@ public class ColorMap {
         }
 
         ColorMap map = new ColorMap();
-        map.colorList = new ArrayList<ColorMap.ColorMapEntry>();
+        map.colorList = new ArrayList<>();
         map.name = name;
         for (int i = 0; i < ele.length; i++) {
             map.colorList.add(map.new ColorMapEntry(colors[i], ele[i]));

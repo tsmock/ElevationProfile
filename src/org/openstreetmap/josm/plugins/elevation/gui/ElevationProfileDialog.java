@@ -52,7 +52,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     private IElevationModel model;
     /* GPX data */
     private GpxLayer activeLayer = null;
-    private final HashMap<GpxLayer, ElevationModel> layerMap = new HashMap<GpxLayer, ElevationModel>();
+    private final HashMap<GpxLayer, ElevationModel> layerMap = new HashMap<>();
 
     /* UI elements */
     private final ElevationProfilePanel profPanel;
@@ -66,7 +66,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     private final JButton zoomButton;
 
     /* Listener to the elevation model */
-    private final List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
+    private final List<IElevationModelListener> listeners = new ArrayList<>();
 
     /**
      * Corresponding layer instance within map view.
@@ -91,7 +91,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     /**
      * Constructor
-     * 
+     *
      * @param name
      *            the name of the dialog
      * @param iconName
@@ -321,7 +321,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     /**
      * Adds a model listener to this instance.
-     * 
+     *
      * @param listener
      *            The listener to add.
      */
@@ -331,7 +331,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     /**
      * Removes a model listener from this instance.
-     * 
+     *
      * @param listener
      *            The listener to remove.
      */
@@ -414,7 +414,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
         @Override
         public void addListDataListener(ListDataListener arg0) {
             if (listeners == null) {
-                listeners = new ArrayList<ListDataListener>();
+                listeners = new ArrayList<>();
             }
             listeners.add(arg0);
         }

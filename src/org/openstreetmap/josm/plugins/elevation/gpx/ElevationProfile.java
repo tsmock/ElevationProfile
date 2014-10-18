@@ -15,20 +15,20 @@ import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
  * of a set of way points. The profile computes min/max/average height from the
  * full way point set and then reduces the number of way points to a given
  * amount, if necessary.
- * 
+ *
  * The computation is done via implementing {@link IGpxWaypointVisitor},
  * subclasses may override the {@link ElevationProfile#visitWayPoint(WayPoint)}
  * method to compute own values or run specific actions. The computation is
  * triggered by calling {@link ElevationProfile#updateValues()}.
- * 
+ *
  * Elevation profiles can break down into further child profiles. This is
  * intended to show different levels of details, if the number of way points
  * exceed the display space (which is usually the case).
- * 
+ *
  * {@link IElevationProfile} {@link IGpxWaypointVisitor} {@link GpxIterator}
- * 
+ *
  * @author Oliver Wieland <oliver.wieland@online.de>
- * 
+ *
  */
 public class ElevationProfile implements IElevationProfile,
 IGpxWaypointVisitor {
@@ -57,7 +57,7 @@ IGpxWaypointVisitor {
 
     /**
      * Creates a name elevation profile without any way points.
-     * 
+     *
      * @param name
      */
     public ElevationProfile(String name) {
@@ -66,7 +66,7 @@ IGpxWaypointVisitor {
 
     /**
      * Creates a name elevation profile with a given set of way points.
-     * 
+     *
      * @param name
      *            The name of the profile.
      * @param parent
@@ -215,12 +215,12 @@ IGpxWaypointVisitor {
 
     /**
      * Sets the way points of this profile.
-     * 
+     *
      * @param wayPoints
      */
     public void setWayPoints(List<WayPoint> wayPoints) {
         if (this.wayPoints != wayPoints) {
-            this.wayPoints = new ArrayList<WayPoint>(wayPoints);
+            this.wayPoints = new ArrayList<>(wayPoints);
             numWayPoints = wayPoints != null ? wayPoints.size() : 0;
             updateValues();
 
@@ -229,7 +229,7 @@ IGpxWaypointVisitor {
 
     /**
      * Checks if the given index is valid or not.
-     * 
+     *
      * @param index
      *            The index to check.
      * @return true, if the given index is valid; otherwise false.
@@ -276,7 +276,7 @@ IGpxWaypointVisitor {
 
     /**
      * Gets the difference between min and max elevation.
-     * 
+     *
      * @return
      */
     @Override
@@ -286,7 +286,7 @@ IGpxWaypointVisitor {
 
     /**
      * Gets the elevation gain.
-     * 
+     *
      * @return
      */
     @Override
@@ -378,7 +378,7 @@ IGpxWaypointVisitor {
      * Gets a flag indicating whether the associated way points contained
      * elevation data or not. This is the case if min and max height or both
      * zero.
-     * 
+     *
      * @return
      */
     @Override

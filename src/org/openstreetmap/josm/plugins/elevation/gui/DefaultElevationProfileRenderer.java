@@ -34,11 +34,11 @@ IElevationProfileRenderer {
 
     private static final int ROUND_RECT_RADIUS = 6;
     /**
-     * 
+     *
      */
     private static final int TRIANGLE_BASESIZE = 24;
     /**
-     * 
+     *
      */
     private static final int BASIC_WPT_RADIUS = 1;
     private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 16;
@@ -56,7 +56,7 @@ IElevationProfileRenderer {
     // private static final double RAD_270 = Math.PI * 1.5;
     private static final double RAD_90 = Math.PI * 0.5;
 
-    private final List<Rectangle> forbiddenRects = new ArrayList<Rectangle>();
+    private final List<Rectangle> forbiddenRects = new ArrayList<>();
 
     @Override
     public Color getColorForWaypoint(IElevationProfile profile, WayPoint wpt,
@@ -171,7 +171,7 @@ IElevationProfileRenderer {
 
     /**
      * Renders a regular way point.
-     * 
+     *
      * @param g
      *            The graphics context.
      * @param profile
@@ -217,7 +217,7 @@ IElevationProfileRenderer {
 
     /**
      * Renders a min/max point
-     * 
+     *
      * @param g
      *            The graphics context.
      * @param profile
@@ -264,7 +264,7 @@ IElevationProfileRenderer {
 
     /**
      * Draws a regular triangle.
-     * 
+     *
      * @param g
      *            The graphics context.
      * @param c
@@ -342,7 +342,7 @@ IElevationProfileRenderer {
 
     /**
      * Renders a start/end point.
-     * 
+     *
      * @param g
      *            The graphics context.
      * @param profile
@@ -364,7 +364,7 @@ IElevationProfileRenderer {
 
     /**
      * Draws a shaded sphere.
-     * 
+     *
      * @param g
      *            The graphics context.
      * @param firstCol
@@ -398,7 +398,7 @@ IElevationProfileRenderer {
 
     /**
      * Draws a label within a filled rounded rectangle with standard gradient colors.
-     * 
+     *
      * @param s
      *            The text to draw.
      * @param x
@@ -414,7 +414,7 @@ IElevationProfileRenderer {
 
     /**
      * Draws a label within a filled rounded rectangle with the specified second gradient color (first color is <tt>Color.WHITE<tt>).
-     * 
+     *
      * @param s
      *            The text to draw.
      * @param x
@@ -461,7 +461,7 @@ IElevationProfileRenderer {
 
     /**
      * Draws a label with an additional triangle on the left side.
-     * 
+     *
      * @param s
      *            The text to draw.
      * @param x
@@ -515,7 +515,7 @@ IElevationProfileRenderer {
 
     /**
      * Checks, if the rectangle has been 'reserved' by an previous draw action.
-     * 
+     *
      * @param r
      *            The area to check for.
      * @return true, if area is already occupied by another rectangle.

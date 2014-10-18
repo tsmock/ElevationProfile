@@ -18,7 +18,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 /**
  * Represents the top-level part of the elevation model. The elevation model
  * breaks done into the tracks/routes of a GPX file.
- * 
+ *
  * @see IElevationModelTrackListener
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
@@ -28,8 +28,8 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
     private final GpxData gpxData;
     private final String name;
     private final WayPointMap profiles = new WayPointMap();
-    private final List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
-    private final List<WayPoint> buffer = new ArrayList<WayPoint>();
+    private final List<IElevationModelListener> listeners = new ArrayList<>();
+    private final List<WayPoint> buffer = new ArrayList<>();
     private int currentProfileIndex = 0;
     private ElevationProfile curProfile = null;
 
@@ -54,7 +54,7 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 
     /**
      * Gets the GPX data instance used by this model.
-     * 
+     *
      * @return
      */
     public GpxData getGpxData() {

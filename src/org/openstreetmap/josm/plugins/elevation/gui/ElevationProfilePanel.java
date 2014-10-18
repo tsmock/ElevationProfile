@@ -45,7 +45,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
     private Rectangle plotArea;
     private final IElevationProfileRenderer renderer = new DefaultElevationProfileRenderer();
     private int selectedIndex = -1;
-    private final List<IElevationProfileSelectionListener> selectionChangedListeners = new ArrayList<IElevationProfileSelectionListener>();
+    private final List<IElevationProfileSelectionListener> selectionChangedListeners = new ArrayList<>();
     private boolean isPainting;
     private int step = 0;
 
@@ -320,7 +320,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
     /**
      * Gets the x value of the left border for axes (slightly smaller than the
      * left x).
-     * 
+     *
      * @return
      */
     private int getPlotLeftAxis() {
@@ -329,7 +329,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the x value of the left border.
-     * 
+     *
      * @return
      */
     private int getPlotLeft() {
@@ -338,7 +338,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the horizontal center coordinate (mid between left and right x).
-     * 
+     *
      * @return
      */
     private int getPlotHCenter() {
@@ -347,7 +347,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the vertical center coordinate (mid between top and bottom y).
-     * 
+     *
      * @return
      */
     private int getPlotVCenter() {
@@ -356,7 +356,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the x value of the right border.
-     * 
+     *
      * @return
      */
     private int getPlotRight() {
@@ -373,7 +373,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets for an elevation value the according y coordinate in the plot area.
-     * 
+     *
      * @param elevation
      * @return The y coordinate in the plot area.
      */
@@ -393,7 +393,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Draws the elevation profile
-     * 
+     *
      * @param g
      */
     private void drawProfile(Graphics g) {

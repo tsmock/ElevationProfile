@@ -16,7 +16,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  *  Class HgtReader reads data from SRTM HGT files. Currently this class is restricted to a resolution of 3 arc seconds.
- * 
+ *
  *  SRTM data files are available at the <a href="http://dds.cr.usgs.gov/srtm/version2_1/SRTM3">NASA SRTM site</a>
  *  @author Oliver Wieland <oliver.wieland@online.de>
  */
@@ -30,7 +30,7 @@ public class HgtReader {
     public static final int HGT_ROW_LENGTH = 1201; // number of elevation values per line
     public static final int HGT_VOID = -32768; // magic number which indicates 'void data' in HGT file
 
-    private final HashMap<String, ShortBuffer> cache = new HashMap<String, ShortBuffer>();
+    private final HashMap<String, ShortBuffer> cache = new HashMap<>();
 
     public double getElevationFromHgt(LatLon coor) {
         try {
