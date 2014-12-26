@@ -14,7 +14,6 @@ import javax.swing.Icon;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.TileController;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.Main;
@@ -124,12 +123,6 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
             System.err.println(ex);
             ex.printStackTrace(System.err);
         }
-    }
-
-    @Override
-    public TileCache getTileCache() {
-        // TODO Auto-generated method stub
-        return tileCache;
     }
 
     @Override
