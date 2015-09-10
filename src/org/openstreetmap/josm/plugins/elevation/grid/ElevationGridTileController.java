@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.grid;
 
-import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.TileController;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
@@ -15,7 +14,6 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  *
  */
 public class ElevationGridTileController extends TileController {
-    private final JobDispatcher jobDispatcher; // is private and no getter
 
     /**
      * @param source
@@ -28,7 +26,6 @@ public class ElevationGridTileController extends TileController {
 
         tileSource = source; // FIXME: hard-coded in base class (although parameter is given)!!
         tileLoader = loader; // FIXME: hard-coded in base class!
-        jobDispatcher = JobDispatcher.getInstance();
     }
 
     @Override
@@ -47,7 +44,7 @@ public class ElevationGridTileController extends TileController {
             tile.loadPlaceholderFromCache(tileCache);
         }
         if (!tile.isLoaded()) {
-            jobDispatcher.addJob(tileLoader.createTileLoaderJob(tile));
+            tileLoader.createTileLoaderJob(tile).submit();
         }
         return tile;
     }
@@ -55,9 +52,4 @@ public class ElevationGridTileController extends TileController {
     /**
      *
      */
-    @Override
-    public void cancelOutstandingJobs() {
-        super.cancelOutstandingJobs(); // should not make a difference but you never know...
-        jobDispatcher.cancelOutstandingJobs();
-    }
 }
