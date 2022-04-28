@@ -1,30 +1,26 @@
-// License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.elevation.tests;
+package org.openstreetmap.josm.plugins.elevation;// License: GPL. For details, see LICENSE file.
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Color;
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.plugins.elevation.ColorMap;
 import org.openstreetmap.josm.plugins.elevation.grid.EleCoordinate;
 import org.openstreetmap.josm.plugins.elevation.grid.EleVertex;
-import org.openstreetmap.josm.testutils.JOSMTestRules;
+import org.openstreetmap.josm.testutils.annotations.BasicPreferences;
+import org.openstreetmap.josm.tools.Logging;
 
-public class EleVertexTest {
+@BasicPreferences
+class EleVertexTest {
 
     private static final double EPS = 1e-10;
 
-    @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences();
-
     @Test
-    public void testDivide() {
+    void testDivide() {
         EleCoordinate p1 = new EleCoordinate(30.0, 30.0, 100.0);
         EleCoordinate p2 = new EleCoordinate(35.0, 30.0, 120.0);
         EleCoordinate p3 = new EleCoordinate(35.0, 40.0, 110.0);
@@ -51,31 +47,31 @@ public class EleVertexTest {
     }
 
     @Test
-    public void testSimpleRecurse() {
+    void testSimpleRecurse() {
         EleCoordinate c1 = new EleCoordinate(new LatLon(50.8328, 8.1337), 300);
         EleCoordinate c2 = new EleCoordinate(new LatLon(50.8328, 7.9217), 200);
         EleCoordinate c3 = new EleCoordinate(new LatLon(50.9558, 7.9217), 400);
         /*EleCoordinate c4 =*/ new EleCoordinate(new LatLon(50.5767627, 9.1938483), 100);
 
         EleVertex v1 = new EleVertex(c1, c2, c3);
-        System.out.println("Start recurse");
+        Logging.debug("Start recurse");
         recurse(v1, 0);
     }
 
     private void recurse(EleVertex v, int depth) {
         if (!v.isFinished() && depth < 100) {
-            System.out.println("\tDivide: " + v);
+            Logging.trace("\tDivide: " + v);
             List<EleVertex> list = v.divide();
             assertNotNull(list);
             assertEquals(2, list.size());
             assertTrue(depth < 50); //, "Too many recursions?");
             for (EleVertex eleVertex : list) {
                 //System.out.println("\t\tRecurse: " + eleVertex);
-                assertTrue("Area is larger " + v.getArea() + " > " + eleVertex.getArea(), eleVertex.getArea() < v.getArea());
+                assertTrue(eleVertex.getArea() < v.getArea(), "Area is larger " + v.getArea() + " > " + eleVertex.getArea());
                 recurse(eleVertex, depth + 1);
             }
         } else {
-            System.out.println("Finished: " + depth);
+            Logging.debug("Finished: " + depth);
         }
     }
     /*
